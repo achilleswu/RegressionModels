@@ -1,0 +1,49 @@
+---
+title: "Regression Models Motor Trend Analysis"
+author: "Qiang Wu"
+date: "December 12, 2015"
+output: pdf_document
+---
+
+1. load data mtcars
+
+```{r, echo=TRUE, cache=TRUE}
+library(ggplot2)
+data("mtcars")
+summary(mtcars)
+```
+
+2. First let's plot the mpg vs the auto/manual
+```{r, echo=TRUE, cache=TRUE}
+ggplot(mtcars, aes(factor(am), mpg)) + geom_boxplot()
+```
+
+3. From the plot, we can clearly see there is mpg difference between mpg in auto and manual cars
+```{r, echo=TRUE, cache=TRUE}
+median(mtcars[mtcars$am==0,]$mpg)
+median(mtcars[mtcars$am==1,]$mpg)
+```
+
+4. Try to run regression.
+```{r, echo=TRUE, cache=TRUE}
+fit<-lm(mpg~factor(am), mtcars)
+summary(fit)
+```
+
+5. From fit, we can see there is 
+`r coef(fit)[2]` difference between auto/manual cars.
+It's also greater than 2 * `r coef(summary(fit))[4]`
+And p value is very small, so this means this slop is significant.
+
+6. play with mtcars more, if we consider all information
+```{r, echo=TRUE, cache=TRUE}
+summary(lm(mpg~., mtcars))
+```
+We can see no parameter is significant any more. But seems weight (wt) is more important than others.
+
+7. If we think about am and wt only.
+```{r, echo=TRUE, cache=TRUE}
+summary(lm(mpg~factor(am)+wt, mtcars))
+```
+We can see in this case, am is not as importatn as weight.
+
